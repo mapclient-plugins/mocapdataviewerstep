@@ -5,6 +5,7 @@ MAP Client Plugin Step
 import os
 
 from PySide import QtCore
+from PySide import QtGui
 
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclientplugins.mocapdataviewerstep.configuredialog import ConfigureDialog
@@ -21,6 +22,7 @@ class MOCAPDataViewerStep(WorkflowStepMountPoint):
         self._configured = False  # A step cannot be executed until it has been configured.
         self._category = 'General'
         # Add any other initialisation code here:
+        self._icon = QtGui.QImage(':/mocapdataviewerstep/images/mocapdataviewericon.png')
         # Ports:
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#provides',

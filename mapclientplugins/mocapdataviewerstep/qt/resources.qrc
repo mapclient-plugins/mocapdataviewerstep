@@ -1,0 +1,6 @@
+
+<RCC>
+  <qresource prefix="mocapdataviewerstep">
+    <file>images/mocapdataviewericon.png</file>
+  </qresource>
+</RCC>

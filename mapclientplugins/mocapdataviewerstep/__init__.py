@@ -8,4 +8,4 @@ __author__ = 'Hugh Sorby'
 
 # import class that derives itself from the step mountpoint.
 from mapclientplugins.mocapdataviewerstep import step
-
+import mapclientplugins.mocapdataviewerstep.resources_rc
