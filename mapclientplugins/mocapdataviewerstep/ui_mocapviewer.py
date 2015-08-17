@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'qt/mocapviewer.ui'
 #
-# Created: Wed Jun 18 22:01:36 2014
-#      by: pyside-uic 0.2.15 running on PySide 1.2.1
+# Created: Mon Aug 17 13:42:15 2015
+#      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -26,14 +26,14 @@ class Ui_MOCAPViewer(object):
         self.verticalLayout = QtGui.QVBoxLayout(self.groupBox_2)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.zincWidget = ZincWidget(self.groupBox_2)
+        self.sceneviewerWidget = SceneviewerWidget(self.groupBox_2)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.zincWidget.sizePolicy().hasHeightForWidth())
-        self.zincWidget.setSizePolicy(sizePolicy)
-        self.zincWidget.setObjectName("zincWidget")
-        self.verticalLayout.addWidget(self.zincWidget)
+        sizePolicy.setHeightForWidth(self.sceneviewerWidget.sizePolicy().hasHeightForWidth())
+        self.sceneviewerWidget.setSizePolicy(sizePolicy)
+        self.sceneviewerWidget.setObjectName("sceneviewerWidget")
+        self.verticalLayout.addWidget(self.sceneviewerWidget)
         self.gridLayout.addWidget(self.groupBox_2, 0, 1, 1, 2)
         self.groupBox = QtGui.QGroupBox(MOCAPViewer)
         self.groupBox.setObjectName("groupBox")
@@ -100,4 +100,4 @@ class Ui_MOCAPViewer(object):
         self.pushButtonPlay.setText(QtGui.QApplication.translate("MOCAPViewer", "&Play", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MOCAPViewer", "Icon size:", None, QtGui.QApplication.UnicodeUTF8))
 
-from mapclientplugins.mocapdataviewerstep.zincwidget import ZincWidget
+from mapclientplugins.mocapdataviewerstep.sceneviewerwidget import SceneviewerWidget

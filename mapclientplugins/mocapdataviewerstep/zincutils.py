@@ -17,29 +17,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
-from PySide import QtCore
-
 from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
 from opencmiss.zinc.element import Element, Elementbasis
 from opencmiss.zinc.field import Field
 from opencmiss.zinc.glyph import Glyph
 from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_LOCAL, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT
 
-COORDINATE_SYSTEM_LOCAL = SCENECOORDINATESYSTEM_LOCAL
-COORDINATE_SYSTEM_WINDOW_PIXEL_TOP_LEFT = SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT
-
-button_map = {QtCore.Qt.LeftButton: Sceneviewerinput.BUTTON_TYPE_LEFT, QtCore.Qt.MidButton: Sceneviewerinput.BUTTON_TYPE_MIDDLE, QtCore.Qt.RightButton: Sceneviewerinput.BUTTON_TYPE_RIGHT}
-# Create a modifier map of Qt modifier keys to Zinc modifier keys
-def modifier_map(qt_modifiers):
-    '''
-    Return a Zinc SceneViewerInput modifiers object that is created from
-    the Qt modifier flags passed in.
-    '''
-    modifiers = Sceneviewerinput.MODIFIER_FLAG_NONE
-    if qt_modifiers & QtCore.Qt.SHIFT:
-        modifiers = modifiers | Sceneviewerinput.MODIFIER_FLAG_SHIFT
-
-    return modifiers
 
 def createFiniteElementField(region):
     '''

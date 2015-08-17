@@ -50,7 +50,7 @@ class MOCAPViewer(QtGui.QWidget):
         glyphmodule.defineStandardGlyphs()
         materialmodule = self._context.getMaterialmodule()
         materialmodule.defineStandardMaterials()
-        self._ui.zincWidget.setContext(self._context)
+        self._ui.sceneviewerWidget.setContext(self._context)
 
         self._timer = QtCore.QTimer(self)
         self._timeKeeper = self._context.getTimekeepermodule().getDefaultTimekeeper()
@@ -59,7 +59,7 @@ class MOCAPViewer(QtGui.QWidget):
 
         self._region = self._context.getDefaultRegion()
         self._createScene(self._region)
-        self._graphics = createNodeGraphics(self._region)
+        self._graphics = None
 
 
         self._populateListWidget()
@@ -68,7 +68,7 @@ class MOCAPViewer(QtGui.QWidget):
     def _makeConnections(self):
         self._ui.listWidget.itemClicked.connect(self._labelClicked)
         self._ui.listWidget.itemChanged.connect(self._labelChanged)
-        self._ui.zincWidget.graphicsInitialized.connect(self._sceneviewerReady)
+        self._ui.sceneviewerWidget.graphicsInitialized.connect(self._sceneviewerReady)
         self._ui.pushButtonPlay.clicked.connect(self._playClicked)
         self._ui.spinBox.valueChanged.connect(self._sizeChanged)
         self._ui.horizontalSlider.valueChanged.connect(self._timeChanged)
@@ -105,7 +105,8 @@ class MOCAPViewer(QtGui.QWidget):
         self._timeKeeper.setTime(time)
 
     def _sceneviewerReady(self):
-        self._ui.zincWidget.viewAll()
+        self._graphics = createNodeGraphics(self._region)
+        self._ui.sceneviewerWidget.viewAll()
 
     def getTRCData(self):
         return self._trc_data
@@ -120,7 +121,7 @@ class MOCAPViewer(QtGui.QWidget):
         # Set node selected.
         node = self._getNodeForLabel(item.text())
         nodeset = node.getNodeset()
-        selection_group = self._ui.zincWidget.getSelectionGroup()
+        selection_group = self._ui.sceneviewerWidget._selectionGroup#getSelectionGroup()
         nodegroup = selection_group.getFieldNodeGroup(nodeset)
         if not nodegroup.isValid():
             nodegroup = selection_group.createFieldNodeGroup(nodeset)
