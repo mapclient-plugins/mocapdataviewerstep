@@ -17,7 +17,7 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
-from PySide import QtGui, QtCore
+from PySide2 import QtCore, QtWidgets
 
 from opencmiss.zinc.context import Context
 
@@ -25,7 +25,7 @@ from mapclientplugins.mocapdataviewerstep.ui_mocapviewer import Ui_MOCAPViewer
 from mapclientplugins.mocapdataviewerstep.zincutils import createFiniteElementField, createNodeGraphics, \
     createStoredStringField
 
-class MOCAPViewer(QtGui.QWidget):
+class MOCAPViewer(QtWidgets.QWidget):
 
     def __init__(self, trc_data):
         super(MOCAPViewer, self).__init__()
