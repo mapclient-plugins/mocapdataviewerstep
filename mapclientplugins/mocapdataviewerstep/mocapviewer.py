@@ -25,6 +25,7 @@ from mapclientplugins.mocapdataviewerstep.ui_mocapviewer import Ui_MOCAPViewer
 from mapclientplugins.mocapdataviewerstep.zincutils import createFiniteElementField, createNodeGraphics, \
     createStoredStringField
 
+
 class MOCAPViewer(QtWidgets.QWidget):
 
     def __init__(self, trc_data):
@@ -60,7 +61,6 @@ class MOCAPViewer(QtWidgets.QWidget):
         self._region = self._context.getDefaultRegion()
         self._createScene(self._region)
         self._graphics = createNodeGraphics(self._region)
-
 
         self._populateListWidget()
         self._makeConnections()
