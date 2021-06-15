@@ -17,18 +17,23 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
-from PySide import QtCore
+from PySide2 import QtCore
 
 from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
 from opencmiss.zinc.element import Element, Elementbasis
 from opencmiss.zinc.field import Field
 from opencmiss.zinc.glyph import Glyph
-from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_LOCAL, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT
+from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_LOCAL, \
+    SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT
 
 COORDINATE_SYSTEM_LOCAL = SCENECOORDINATESYSTEM_LOCAL
 COORDINATE_SYSTEM_WINDOW_PIXEL_TOP_LEFT = SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT
 
-button_map = {QtCore.Qt.LeftButton: Sceneviewerinput.BUTTON_TYPE_LEFT, QtCore.Qt.MidButton: Sceneviewerinput.BUTTON_TYPE_MIDDLE, QtCore.Qt.RightButton: Sceneviewerinput.BUTTON_TYPE_RIGHT}
+button_map = {QtCore.Qt.LeftButton: Sceneviewerinput.BUTTON_TYPE_LEFT,
+              QtCore.Qt.MidButton: Sceneviewerinput.BUTTON_TYPE_MIDDLE,
+              QtCore.Qt.RightButton: Sceneviewerinput.BUTTON_TYPE_RIGHT}
+
+
 # Create a modifier map of Qt modifier keys to Zinc modifier keys
 def modifier_map(qt_modifiers):
     '''
@@ -40,6 +45,7 @@ def modifier_map(qt_modifiers):
         modifiers = modifiers | Sceneviewerinput.MODIFIER_FLAG_SHIFT
 
     return modifiers
+
 
 def createFiniteElementField(region):
     '''
@@ -62,6 +68,7 @@ def createFiniteElementField(region):
 
     return finite_element_field
 
+
 def createStoredStringField(region):
     '''
     Create a finite element field of three dimensions
@@ -77,6 +84,7 @@ def createStoredStringField(region):
     field_module.endChange()
 
     return stored_string_field
+
 
 def create1DFiniteElement(finite_element_field, node1, node2):
     # Use a 3D mesh to to create the 3D finite element.
@@ -100,6 +108,7 @@ def create1DFiniteElement(finite_element_field, node1, node2):
     element = mesh.createElement(-1, element_template)
 
     return element
+
 
 def create3DFiniteElement(fieldmodule, finite_element_field, node_coordinate_set):
     '''
@@ -135,7 +144,6 @@ def create3DFiniteElement(fieldmodule, finite_element_field, node_coordinate_set
     # the indecies of the nodes in the node template we want to use.
     node_indexes = [1, 2, 3, 4, 5, 6, 7, 8]
 
-
     # Define a nodally interpolated element field or field component in the
     # element_template
     element_template.defineFieldSimpleNodal(finite_element_field, -1, linear_basis, node_indexes)
@@ -145,6 +153,7 @@ def create3DFiniteElement(fieldmodule, finite_element_field, node_coordinate_set
         element_template.setNode(i + 1, node)
 
     mesh.defineElement(-1, element_template)
+
 
 def createFiniteElement(region, finite_element_field, dim):
     '''
@@ -157,13 +166,15 @@ def createFiniteElement(region, finite_element_field, dim):
     fieldmodule = region.getFieldmodule()
     fieldmodule.beginChange()
     # Define the coordinates for each 3D element
-    node_coordinate_set = [[0, 0, 0], [dim[0], 0, 0], [0, dim[1], 0], [dim[0], dim[1], 0], [0, 0, dim[2]], [dim[0], 0, dim[2]], [0, dim[1], dim[2]], [dim[0], dim[1], dim[2]]]
-#         node_coordinate_set = [[-0.5, -0.5, -0.5], [dim[0] + 0.5, -0.5, -0.5], [-0.5, dim[1] + 0.5, -0.5], [dim[0] + 0.5, dim[1] + 0.5, -0.5],
-#                                 [-0.5, -0.5, dim[2] + 0.5], [dim[0] + 0.5, -0.5, dim[2] + 0.5], [-0.5, dim[1] + 0.5, dim[2] + 0.5], [dim[0] + 0.5, dim[1] + 0.5, dim[2] + 0.5]]
+    node_coordinate_set = [[0, 0, 0], [dim[0], 0, 0], [0, dim[1], 0], [dim[0], dim[1], 0], [0, 0, dim[2]],
+                           [dim[0], 0, dim[2]], [0, dim[1], dim[2]], [dim[0], dim[1], dim[2]]]
+    #         node_coordinate_set = [[-0.5, -0.5, -0.5], [dim[0] + 0.5, -0.5, -0.5], [-0.5, dim[1] + 0.5, -0.5], [dim[0] + 0.5, dim[1] + 0.5, -0.5],
+    #                                 [-0.5, -0.5, dim[2] + 0.5], [dim[0] + 0.5, -0.5, dim[2] + 0.5], [-0.5, dim[1] + 0.5, dim[2] + 0.5], [dim[0] + 0.5, dim[1] + 0.5, dim[2] + 0.5]]
     create3DFiniteElement(fieldmodule, finite_element_field, node_coordinate_set)
 
     fieldmodule.defineAllFaces()
     fieldmodule.endChange()
+
 
 def createSelectionBox(region, name):
     scene = region.getScene()
@@ -183,6 +194,7 @@ def createSelectionBox(region, name):
     scene.endChange()
 
     return selection_box
+
 
 def createNodeGraphics(region):
     scene = region.getScene()
@@ -220,5 +232,3 @@ def createNodeGraphics(region):
     scene.endChange()
 
     return [node_graphics, node_graphics_2]
-
-

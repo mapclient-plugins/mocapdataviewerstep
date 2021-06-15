@@ -1,15 +1,15 @@
-
 '''
 MAP Client Plugin Step
 '''
 import os
 
 import json
-from PySide import QtGui
+from PySide2 import QtGui
 
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclientplugins.mocapdataviewerstep.configuredialog import ConfigureDialog
 from mapclientplugins.mocapdataviewerstep.mocapviewer import MOCAPViewer
+
 
 class MOCAPDataViewerStep(WorkflowStepMountPoint):
     '''
@@ -35,7 +35,6 @@ class MOCAPDataViewerStep(WorkflowStepMountPoint):
         self._trc_data = None
         self._view = None
 
-
     def execute(self):
         '''
         Add your code here that will kick off the execution of the step.
@@ -47,9 +46,10 @@ class MOCAPDataViewerStep(WorkflowStepMountPoint):
             self._view = MOCAPViewer(self._trc_data)
             self._view._ui.pushButtonDone.clicked.connect(self._doneExecution)
 
-#         self._setCurrentUndoRedoStack(self._model.getUndoRedoStack())
+        #         self._setCurrentUndoRedoStack(self._model.getUndoRedoStack())
         self._setCurrentWidget(self._view)
-#         self._doneExecution()
+
+    #         self._doneExecution()
 
     def _viewerClosed(self):
         self._trc_data = self._view.getTRCData()
@@ -80,7 +80,7 @@ class MOCAPDataViewerStep(WorkflowStepMountPoint):
         then set:
             self._configured = True
         '''
-        dlg = ConfigureDialog()
+        dlg = ConfigureDialog(self._main_window)
         dlg.identifierOccursCount = self._identifierOccursCount
         dlg.setConfig(self._config)
         dlg.validate()
@@ -122,5 +122,3 @@ class MOCAPDataViewerStep(WorkflowStepMountPoint):
         d.identifierOccursCount = self._identifierOccursCount
         d.setConfig(self._config)
         self._configured = d.validate()
-
-

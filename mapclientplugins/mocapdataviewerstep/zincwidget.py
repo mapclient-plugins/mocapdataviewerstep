@@ -17,19 +17,24 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
-from PySide import QtCore, QtOpenGL
+from PySide2 import QtCore, QtOpenGL
 
 # from opencmiss.zinc.glyph import Glyph
 from opencmiss.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
 from opencmiss.zinc.sceneviewerinput import Sceneviewerinput
-from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_LOCAL, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, SCENECOORDINATESYSTEM_WORLD
+from opencmiss.zinc.scenecoordinatesystem import SCENECOORDINATESYSTEM_LOCAL, \
+    SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, SCENECOORDINATESYSTEM_WORLD
 from opencmiss.zinc.field import Field
 from opencmiss.zinc.glyph import Glyph
 from opencmiss.zinc.status import OK
 
 # mapping from qt to zinc start
 # Create a button map of Qt mouse buttons to Zinc input buttons
-button_map = {QtCore.Qt.LeftButton: Sceneviewerinput.BUTTON_TYPE_LEFT, QtCore.Qt.MidButton: Sceneviewerinput.BUTTON_TYPE_MIDDLE, QtCore.Qt.RightButton: Sceneviewerinput.BUTTON_TYPE_RIGHT}
+button_map = {QtCore.Qt.LeftButton: Sceneviewerinput.BUTTON_TYPE_LEFT,
+              QtCore.Qt.MidButton: Sceneviewerinput.BUTTON_TYPE_MIDDLE,
+              QtCore.Qt.RightButton: Sceneviewerinput.BUTTON_TYPE_RIGHT}
+
+
 # Create a modifier map of Qt modifier keys to Zinc modifier keys
 def modifier_map(qt_modifiers):
     '''
@@ -41,29 +46,33 @@ def modifier_map(qt_modifiers):
         modifiers = modifiers | Sceneviewerinput.MODIFIER_FLAG_SHIFT
 
     return modifiers
+
+
 # mapping from qt to zinc end
 
 SELECTION_RUBBERBAND_NAME = 'selection_rubberband'
 
+
 # projectionMode start
 class ProjectionMode(object):
-
     PARALLEL = 0
     PERSPECTIVE = 1
+
+
 # projectionMode end
 
 
 # selectionMode start
 class SelectionMode(object):
-
     NONE = -1
     EXCULSIVE = 0
     ADDITIVE = 1
+
+
 # selectionMode end
 
 
 class ZincWidget(QtOpenGL.QGLWidget):
-
     # Create a signal to notify when the sceneviewer is ready.
     graphicsInitialized = QtCore.Signal()
 
@@ -127,7 +136,8 @@ class ZincWidget(QtOpenGL.QGLWidget):
 
             # From the scene viewer module we can create a scene viewer, we set up the
             # scene viewer to have the same OpenGL properties as the QGLWidget.
-            self._sceneviewer = scene_viewer_module.createSceneviewer(Sceneviewer.BUFFERING_MODE_DOUBLE, Sceneviewer.STEREO_MODE_DEFAULT)
+            self._sceneviewer = scene_viewer_module.createSceneviewer(Sceneviewer.BUFFERING_MODE_DOUBLE,
+                                                                      Sceneviewer.STEREO_MODE_DEFAULT)
             self._sceneviewer.setProjectionMode(Sceneviewer.PROJECTION_MODE_PERSPECTIVE)
 
             # Create a filter for visibility flags which will allow us to see our graphic.
@@ -166,19 +176,21 @@ class ZincWidget(QtOpenGL.QGLWidget):
             # Set up unproject pipeline
             self._window_coords_from = fieldmodule.createFieldConstant([0, 0, 0])
             self._global_coords_from = fieldmodule.createFieldConstant([0, 0, 0])
-            unproject = fieldmodule.createFieldSceneviewerProjection(self._sceneviewer, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT, SCENECOORDINATESYSTEM_WORLD)
-            project = fieldmodule.createFieldSceneviewerProjection(self._sceneviewer, SCENECOORDINATESYSTEM_WORLD, SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT)
+            unproject = fieldmodule.createFieldSceneviewerProjection(self._sceneviewer,
+                                                                     SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT,
+                                                                     SCENECOORDINATESYSTEM_WORLD)
+            project = fieldmodule.createFieldSceneviewerProjection(self._sceneviewer, SCENECOORDINATESYSTEM_WORLD,
+                                                                   SCENECOORDINATESYSTEM_WINDOW_PIXEL_TOP_LEFT)
 
-    #         unproject_t = fieldmodule.createFieldTranspose(4, unproject)
+            #         unproject_t = fieldmodule.createFieldTranspose(4, unproject)
             self._global_coords_to = fieldmodule.createFieldProjection(self._window_coords_from, unproject)
             self._window_coords_to = fieldmodule.createFieldProjection(self._global_coords_from, project)
 
-
             self._sceneviewer.viewAll()
 
-    #  Not really applicable to us yet.
-    #         self._selection_notifier = scene.createSelectionnotifier()
-    #         self._selection_notifier.setCallback(self._zincSelectionEvent)
+            #  Not really applicable to us yet.
+            #         self._selection_notifier = scene.createSelectionnotifier()
+            #         self._selection_notifier.setCallback(self._zincSelectionEvent)
 
             self._sceneviewernotifier = self._sceneviewer.createSceneviewernotifier()
             self._sceneviewernotifier.setCallback(self._zincSceneviewerEvent)
@@ -280,7 +292,8 @@ class ZincWidget(QtOpenGL.QGLWidget):
         return x, y
 
     def _getNearestGraphic(self, x, y, domain_type):
-        self._scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_LOCAL, x - 0.5, y - 0.5, x + 0.5, y + 0.5)
+        self._scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_LOCAL, x - 0.5, y - 0.5,
+                                                  x + 0.5, y + 0.5)
         nearest_graphics = self._scenepicker.getNearestGraphics()
         if nearest_graphics.isValid() and nearest_graphics.getFieldDomainType() == domain_type:
             return nearest_graphics
@@ -302,7 +315,8 @@ class ZincWidget(QtOpenGL.QGLWidget):
         return self._getNearestGraphic(x, y, Field.DOMAIN_TYPE_POINT)
 
     def getNearestNode(self, x, y):
-        self._scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_LOCAL, x - 0.5, y - 0.5, x + 0.5, y + 0.5)
+        self._scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_LOCAL, x - 0.5, y - 0.5,
+                                                  x + 0.5, y + 0.5)
         node = self._scenepicker.getNearestNode()
 
         return node
@@ -339,10 +353,10 @@ class ZincWidget(QtOpenGL.QGLWidget):
         if event.getChangeFlags() & Sceneviewerevent.CHANGE_FLAG_REPAINT_REQUIRED:
             QtCore.QTimer.singleShot(0, self.updateGL)
 
-#  Not applicable at the current point in time.
-#     def _zincSelectionEvent(self, event):
-#         print(event.getChangeFlags())
-#         print('go the selection change')
+    #  Not applicable at the current point in time.
+    #     def _zincSelectionEvent(self, event):
+    #         print(event.getChangeFlags())
+    #         print('go the selection change')
 
     # resizeGL start
     def resizeGL(self, width, height):
@@ -358,12 +372,16 @@ class ZincWidget(QtOpenGL.QGLWidget):
         '''
         event.accept()
         self._handle_mouse_events = False  # Track when the zinc should be handling mouse events
-        if not self._ignore_mouse_events and (event.modifiers() & QtCore.Qt.SHIFT) and (self._nodeSelectMode or self._elemSelectMode) and button_map[event.button()] == Sceneviewerinput.BUTTON_TYPE_LEFT:
+        if not self._ignore_mouse_events and (event.modifiers() & QtCore.Qt.SHIFT) and (
+                self._nodeSelectMode or self._elemSelectMode) and button_map[
+            event.button()] == Sceneviewerinput.BUTTON_TYPE_LEFT:
             self._selection_position_start = (event.x(), event.y())
             self._selection_mode = SelectionMode.EXCULSIVE
             if event.modifiers() & QtCore.Qt.ALT:
                 self._selection_mode = SelectionMode.ADDITIVE
-        elif not self._ignore_mouse_events and not event.modifiers() or (event.modifiers() & QtCore.Qt.SHIFT and button_map[event.button()] == Sceneviewerinput.BUTTON_TYPE_RIGHT):
+        elif not self._ignore_mouse_events and not event.modifiers() or (
+                event.modifiers() & QtCore.Qt.SHIFT and button_map[
+            event.button()] == Sceneviewerinput.BUTTON_TYPE_RIGHT):
             scene_input = self._sceneviewer.createSceneviewerinput()
             scene_input.setPosition(event.x(), event.y())
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_PRESS)
@@ -394,7 +412,8 @@ class ZincWidget(QtOpenGL.QGLWidget):
                 right = max(x, self._selection_position_start[0])
                 bottom = min(y, self._selection_position_start[1])
                 top = max(y, self._selection_position_start[1])
-                self._scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_LOCAL, left, bottom, right, top);
+                self._scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_LOCAL, left, bottom,
+                                                          right, top);
                 if self._selection_mode == SelectionMode.EXCULSIVE:
                     self._selectionGroup.clear()
                 if self._nodeSelectMode:
@@ -403,11 +422,13 @@ class ZincWidget(QtOpenGL.QGLWidget):
                     self._scenepicker.addPickedElementsToFieldGroup(self._selectionGroup)
             else:
 
-                self._scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_LOCAL, x - 0.5, y - 0.5, x + 0.5, y + 0.5)
+                self._scenepicker.setSceneviewerRectangle(self._sceneviewer, SCENECOORDINATESYSTEM_LOCAL, x - 0.5,
+                                                          y - 0.5, x + 0.5, y + 0.5)
                 if self._nodeSelectMode and self._elemSelectMode and self._selection_mode == SelectionMode.EXCULSIVE and not self._scenepicker.getNearestGraphics().isValid():
                     self._selectionGroup.clear()
 
-                if self._nodeSelectMode and (self._scenepicker.getNearestGraphics().getFieldDomainType() == Field.DOMAIN_TYPE_NODES):
+                if self._nodeSelectMode and (
+                        self._scenepicker.getNearestGraphics().getFieldDomainType() == Field.DOMAIN_TYPE_NODES):
                     node = self._scenepicker.getNearestNode()
                     nodeset = node.getNodeset()
 
@@ -427,7 +448,11 @@ class ZincWidget(QtOpenGL.QGLWidget):
                         else:
                             group.addNode(node)
 
-                if self._elemSelectMode and (self._scenepicker.getNearestGraphics().getFieldDomainType() in [Field.DOMAIN_TYPE_MESH1D, Field.DOMAIN_TYPE_MESH2D, Field.DOMAIN_TYPE_MESH3D, Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]):
+                if self._elemSelectMode and (
+                        self._scenepicker.getNearestGraphics().getFieldDomainType() in [Field.DOMAIN_TYPE_MESH1D,
+                                                                                        Field.DOMAIN_TYPE_MESH2D,
+                                                                                        Field.DOMAIN_TYPE_MESH3D,
+                                                                                        Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]):
                     elem = self._scenepicker.getNearestElement()
                     mesh = elem.getMesh()
 
@@ -447,11 +472,10 @@ class ZincWidget(QtOpenGL.QGLWidget):
                         else:
                             group.addElement(elem)
 
-
             root_region.endHierarchicalChange()
             self._selection_mode = SelectionMode.NONE
         elif not self._ignore_mouse_events and self._handle_mouse_events:
-#             print('dont come here.')
+            #             print('dont come here.')
             scene_input = self._sceneviewer.createSceneviewerinput()
             scene_input.setPosition(event.x(), event.y())
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_RELEASE)
@@ -495,5 +519,3 @@ class ZincWidget(QtOpenGL.QGLWidget):
             self._sceneviewer.processSceneviewerinput(scene_input)
         else:
             event.ignore()
-
-
