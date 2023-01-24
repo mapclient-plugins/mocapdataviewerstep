@@ -17,7 +17,7 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
-from PySide2 import QtCore, QtOpenGL
+from PySide6 import QtCore, QtOpenGL
 
 # from opencmiss.zinc.glyph import Glyph
 from opencmiss.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
