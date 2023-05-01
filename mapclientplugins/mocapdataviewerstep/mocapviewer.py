@@ -19,7 +19,7 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
 '''
 from PySide6 import QtCore, QtWidgets
 
-from opencmiss.zinc.context import Context
+from cmlibs.zinc.context import Context
 
 from mapclientplugins.mocapdataviewerstep.ui_mocapviewer import Ui_MOCAPViewer
 from mapclientplugins.mocapdataviewerstep.zincutils import createFiniteElementField, createNodeGraphics, \
