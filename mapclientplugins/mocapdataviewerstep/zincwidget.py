@@ -17,7 +17,7 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
-from PySide6 import QtCore, QtOpenGL
+from PySide6 import QtCore, QtOpenGLWidgets
 
 from cmlibs.zinc.sceneviewer import Sceneviewer, Sceneviewerevent
 from cmlibs.zinc.sceneviewerinput import Sceneviewerinput
@@ -29,9 +29,9 @@ from cmlibs.zinc.status import OK
 
 # mapping from qt to zinc start
 # Create a button map of Qt mouse buttons to Zinc input buttons
-button_map = {QtCore.Qt.LeftButton: Sceneviewerinput.BUTTON_TYPE_LEFT,
-              QtCore.Qt.MidButton: Sceneviewerinput.BUTTON_TYPE_MIDDLE,
-              QtCore.Qt.RightButton: Sceneviewerinput.BUTTON_TYPE_RIGHT}
+button_map = {QtCore.Qt.MouseButton.LeftButton: Sceneviewerinput.BUTTON_TYPE_LEFT,
+              QtCore.Qt.MouseButton.MiddleButton: Sceneviewerinput.BUTTON_TYPE_MIDDLE,
+              QtCore.Qt.MouseButton.RightButton: Sceneviewerinput.BUTTON_TYPE_RIGHT}
 
 
 # Create a modifier map of Qt modifier keys to Zinc modifier keys
@@ -41,7 +41,7 @@ def modifier_map(qt_modifiers):
     the Qt modifier flags passed in.
     '''
     modifiers = Sceneviewerinput.MODIFIER_FLAG_NONE
-    if qt_modifiers & QtCore.Qt.SHIFT:
+    if qt_modifiers & QtCore.Qt.KeyboardModifier.ShiftModifier:
         modifiers = modifiers | Sceneviewerinput.MODIFIER_FLAG_SHIFT
 
     return modifiers
@@ -71,7 +71,7 @@ class SelectionMode(object):
 # selectionMode end
 
 
-class ZincWidget(QtOpenGL.QGLWidget):
+class ZincWidget(QtOpenGLWidgets.QOpenGLWidget):
     # Create a signal to notify when the sceneviewer is ready.
     graphicsInitialized = QtCore.Signal()
 
@@ -81,7 +81,7 @@ class ZincWidget(QtOpenGL.QGLWidget):
         Call the super class init functions, set the  Zinc context and the scene viewer handle to None.
         Initialise other attributes that deal with selection and the rotation of the plane.
         '''
-        QtOpenGL.QGLWidget.__init__(self, parent, shared)
+        QtOpenGLWidgets.QOpenGLWidget.__init__(self, parent, shared)
         # Create a Zinc context from which all other objects can be derived either directly or indirectly.
         self._context = None
         self._sceneviewer = None
@@ -350,7 +350,7 @@ class ZincWidget(QtOpenGL.QGLWidget):
         repaint required event all other events are ignored.
         '''
         if event.getChangeFlags() & Sceneviewerevent.CHANGE_FLAG_REPAINT_REQUIRED:
-            QtCore.QTimer.singleShot(0, self.updateGL)
+            QtCore.QTimer.singleShot(0, self.update)
 
     #  Not applicable at the current point in time.
     #     def _zincSelectionEvent(self, event):
@@ -371,15 +371,15 @@ class ZincWidget(QtOpenGL.QGLWidget):
         '''
         event.accept()
         self._handle_mouse_events = False  # Track when the zinc should be handling mouse events
-        if not self._ignore_mouse_events and (event.modifiers() & QtCore.Qt.SHIFT) and (
+        if not self._ignore_mouse_events and (event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier) and (
                 self._nodeSelectMode or self._elemSelectMode) and button_map[
             event.button()] == Sceneviewerinput.BUTTON_TYPE_LEFT:
             self._selection_position_start = (event.x(), event.y())
             self._selection_mode = SelectionMode.EXCULSIVE
-            if event.modifiers() & QtCore.Qt.ALT:
+            if event.modifiers() & QtCore.Qt.KeyboardModifier.AltModifier:
                 self._selection_mode = SelectionMode.ADDITIVE
         elif not self._ignore_mouse_events and not event.modifiers() or (
-                event.modifiers() & QtCore.Qt.SHIFT and button_map[
+                event.modifiers() & QtCore.Qt.KeyboardModifier.ShiftModifier and button_map[
             event.button()] == Sceneviewerinput.BUTTON_TYPE_RIGHT):
             scene_input = self._sceneviewer.createSceneviewerinput()
             scene_input.setPosition(event.x(), event.y())
@@ -512,7 +512,7 @@ class ZincWidget(QtOpenGL.QGLWidget):
             scene_input = self._sceneviewer.createSceneviewerinput()
             scene_input.setPosition(event.x(), event.y())
             scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_MOTION_NOTIFY)
-            if event.type() == QtCore.QEvent.Leave:
+            if event.type() == QtCore.QEvent.Type.Leave:
                 scene_input.setPosition(-1, -1)
 
             self._sceneviewer.processSceneviewerinput(scene_input)
