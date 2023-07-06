@@ -430,12 +430,8 @@ class ZincWidget(QtOpenGLWidgets.QOpenGLWidget):
                         self._scenepicker.getNearestGraphics().getFieldDomainType() == Field.DOMAIN_TYPE_NODES):
                     node = self._scenepicker.getNearestNode()
                     nodeset = node.getNodeset()
+                    group = self._selectionGroup.getOrCreateNodesetGroup(nodeset)
 
-                    nodegroup = self._selectionGroup.getFieldNodeGroup(nodeset)
-                    if not nodegroup.isValid():
-                        nodegroup = self._selectionGroup.createFieldNodeGroup(nodeset)
-
-                    group = nodegroup.getNodesetGroup()
                     if self._selection_mode == SelectionMode.EXCULSIVE:
                         remove_current = group.getSize() == 1 and group.containsNode(node)
                         self._selectionGroup.clear()
@@ -454,12 +450,8 @@ class ZincWidget(QtOpenGLWidgets.QOpenGLWidget):
                                                                                         Field.DOMAIN_TYPE_MESH_HIGHEST_DIMENSION]):
                     elem = self._scenepicker.getNearestElement()
                     mesh = elem.getMesh()
+                    group = self._selectionGroup.getOrCreateMeshGroup(mesh)
 
-                    elementgroup = self._selectionGroup.getFieldElementGroup(mesh)
-                    if not elementgroup.isValid():
-                        elementgroup = self._selectionGroup.createFieldElementGroup(mesh)
-
-                    group = elementgroup.getMeshGroup()
                     if self._selection_mode == SelectionMode.EXCULSIVE:
                         remove_current = group.getSize() == 1 and group.containsElement(elem)
                         self._selectionGroup.clear()

@@ -121,11 +121,7 @@ class MOCAPViewer(QtWidgets.QWidget):
         node = self._getNodeForLabel(item.text())
         nodeset = node.getNodeset()
         selection_group = self._ui.zincWidget.getSelectionGroup()
-        nodegroup = selection_group.getFieldNodeGroup(nodeset)
-        if not nodegroup.isValid():
-            nodegroup = selection_group.createFieldNodeGroup(nodeset)
-
-        group = nodegroup.getNodesetGroup()
+        group = selection_group.getOrCreateNodesetGroup(nodeset)
         if not group.containsNode(node):
             group.removeAllNodes()
             group.addNode(node)
